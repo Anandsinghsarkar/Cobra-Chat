@@ -1,71 +1,47 @@
-# COBRA Social Chat — Full Project
+# COBRA Social Chat
 
-## Included
-- Email/password signup + login
-- Google login
-- Forgot password by email
-- Editable profile: name, unique username, profile image, bio, gender/privacy
-- Firebase Storage gallery image upload
-- Public user profiles
-- World chat; profile opens from chat
-- One-to-one private messages
-- Verification badge controlled by admin
-- XP, Level and ranks: Bronze, Silver, Gold, Platinum, Diamond, Master, Elite, Legend, Cobra
-- Progressive rank profile-card styling; Level 100 unlocks Cobra Mode styling
-- 10 normal chat themes and 20 total Premium themes
-- Normal daily claim 50 XP
-- Premium ₹49 / 30 days, 200 XP/day claim
-- UPI QR generated from environment settings
-- User UTR submission
-- Admin manual payment approve/reject
-- Protected admin page, all users, add XP, verify/unverify, rank override, ban/unban
-- Audit log storage for admin actions
+Firebase + Next.js social chat project for Vercel.
 
-## Firebase setup
-1. Firebase Console -> Project Settings -> General -> add/open a Web App.
-2. Copy Firebase Web config values to Vercel Environment Variables using `.env.example` names.
-3. Authentication -> Sign-in method: enable **Email/Password** and **Google**.
-4. Build -> Realtime Database: create a database.
-5. Build -> Storage: create a bucket.
-6. Realtime Database -> Rules: paste `database.rules.json`.
-7. Storage -> Rules: paste `storage.rules`.
-8. Authentication -> Settings -> Authorized domains: add your `your-project.vercel.app` domain.
+## Main features
+- Email/password + Google authentication
+- Email password reset and password change
+- Editable profile + gallery profile image
+- World chat and private messaging
+- Live online/offline + last seen
+- Edit message, unsend message, permanent delete message
+- Delete private chat from your own view
+- Public profiles accessible from World Chat
+- XP / Level / Bronze to Cobra rank system
+- Rank-specific evolving profile cards; Level 100 has COBRA MODE
+- 10 normal themes, 20 Premium themes; theme changes the complete app background and chat accents
+- Instagram-style fixed bottom icon navigation: World, People, Premium, Settings, Logout
+- Admin panel: all users, verification, XP, rank override, ban/unban
+- UPI QR + UTR manual approval system
+- 10 Premium plans
 
-## Service Account JSON
-Firebase Console -> Project Settings -> Service Accounts -> Firebase Admin SDK -> Generate new private key.
-Put the complete JSON on ONE LINE in Vercel as `FIREBASE_SERVICE_ACCOUNT_JSON`.
-Never upload this JSON to GitHub and never use `NEXT_PUBLIC_` for it.
+## Premium plans
+| Plan | Price | Days | Daily XP |
+|---|---:|---:|---:|
+| Starter | ₹49 | 30 | 200 |
+| Bronze+ | ₹99 | 30 | 500 |
+| Silver+ | ₹180 | 30 | 1,000 |
+| Gold+ | ₹299 | 30 | 1,300 |
+| Platinum+ | ₹449 | 30 | 1,600 |
+| Diamond+ | ₹699 | 30 | 2,000 |
+| Master+ | ₹999 | 30 | 2,500 |
+| Elite+ | ₹1,499 | 30 | 3,000 |
+| Legend+ | ₹1,999 | 30 | 4,000 |
+| Cobra+ | ₹2,999 | 30 | 5,000 |
 
-## Vercel admin credentials
-Set these only in Vercel -> Project -> Settings -> Environment Variables:
-- `ADMIN_EMAIL`
-- `ADMIN_PASSWORD`
-- `ADMIN_SESSION_SECRET` (long random secret)
+All Premium plans unlock 20 themes, Premium card effects and Premium badge. The selected plan's daily XP is used for the 24-hour claim.
 
-Admin page: `/admin/login`
+## Firebase
+Enable Authentication (Email/Password + Google), Realtime Database and Storage. Paste `database.rules.json` and `storage.rules` into Firebase console.
 
-## Payment QR / Premium
-Set:
-- `UPI_ID=yourupi@bank`
-- `UPI_NAME=Your Name`
-- `PREMIUM_PRICE_INR=49`
-- `PREMIUM_DAYS=30`
-- `PREMIUM_DAILY_XP=200`
-- `NORMAL_DAILY_XP=50`
+## Vercel environment variables
+Set Firebase public config, `FIREBASE_SERVICE_ACCOUNT_JSON`, `FIREBASE_DATABASE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, `UPI_ID`, `UPI_NAME`, and `NORMAL_DAILY_XP=50`.
 
-Flow: Premium page -> UPI QR -> user pays -> submits UTR -> `/admin/payments` -> admin checks bank/payment provider -> Approve/Reject. Approval activates 30 days Premium. A submitted UTR alone is NOT proof of payment; verify it before approval.
+Do not upload real service-account JSON or admin passwords to GitHub.
 
-## Rank XP ranges
-- Bronze L1–10: 0–49,999 XP
-- Silver L11–20: 50,000–119,999
-- Gold L21–35: 120,000–249,999
-- Platinum L36–50: 250,000–399,999
-- Diamond L51–65: 400,000–579,999
-- Master L66–80: 580,000–749,999
-- Elite L81–90: 750,000–849,999
-- Legend L91–99: 850,000–999,999
-- Cobra L100: 1,000,000+
-
-## Deploy
-Upload the CONTENTS of this folder to the repository root, not only `app/`.
-Vercel Framework Preset: Next.js. Root Directory: repository root/blank. Build Command: `npm run build`.
+## Payment safety
+A UTR entered by a user is not proof of payment. Before clicking Approve, verify the transaction and exact amount in the merchant/bank/payment account you control.
