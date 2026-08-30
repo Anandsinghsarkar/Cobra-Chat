@@ -6,8 +6,13 @@
       ".read": "auth != null",
       "$uid": {
         ".write": false,
-        "presence": { ".write": "auth != null && auth.uid === $uid" },
-        "deletedChats": { "$chatId": { ".write": "auth != null && auth.uid === $uid" } }
+        "presence": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "!newData.exists() || (newData.hasChildren(['online','lastSeen']) && newData.child('online').isBoolean() && newData.child('lastSeen').isNumber())"
+        },
+        "deletedChats": {
+          "$chatId": { ".write": "auth != null && auth.uid === $uid" }
+        }
       }
     },
     "usernames": { ".read": "auth != null", ".write": false },
@@ -21,7 +26,9 @@
     "privateChats": {
       "$chatId": {
         ".read": "auth != null && data.child('members').child(auth.uid).val() === true",
-        "members": { ".write": "auth != null && newData.child(auth.uid).val() === true" },
+        "members": {
+          ".write": "auth != null && newData.child(auth.uid).val() === true"
+        },
         "messages": {
           "$id": {
             ".write": "auth != null && root.child('privateChats').child($chatId).child('members').child(auth.uid).val() === true && ((!data.exists() && newData.child('senderId').val() === auth.uid) || (data.exists() && data.child('senderId').val() === auth.uid))",
