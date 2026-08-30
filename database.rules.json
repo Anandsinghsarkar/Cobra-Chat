@@ -1,0 +1,34 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      ".read": "auth != null",
+      "$uid": { ".write": false }
+    },
+    "usernames": { ".read": "auth != null", ".write": false },
+    "worldMessages": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null && newData.child('senderId').val() === auth.uid",
+        ".validate": "newData.hasChildren(['senderId','text','createdAt']) && newData.child('text').isString() && newData.child('text').val().length <= 1000"
+      }
+    },
+    "privateChats": {
+      "$chatId": {
+        ".read": "auth != null && data.child('members').child(auth.uid).val() === true",
+        "members": {
+          ".write": "auth != null && newData.child(auth.uid).val() === true"
+        },
+        "messages": {
+          "$id": {
+            ".write": "auth != null && root.child('privateChats').child($chatId).child('members').child(auth.uid).val() === true && newData.child('senderId').val() === auth.uid",
+            ".validate": "newData.hasChildren(['senderId','text','createdAt']) && newData.child('text').isString() && newData.child('text').val().length <= 2000"
+          }
+        }
+      }
+    },
+    "payments": { ".read": false, ".write": false },
+    "auditLogs": { ".read": false, ".write": false }
+  }
+}
