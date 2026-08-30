@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {useEffect,useState} from 'react';
 import {usePathname} from 'next/navigation';
 import {onAuthStateChanged,signOut} from 'firebase/auth';
-import {onDisconnect,ref,set,serverTimestamp} from 'firebase/database';
+import {onDisconnect,onValue,ref,set,serverTimestamp} from 'firebase/database';
 import {Globe2,Users,Crown,Settings,LogOut} from 'lucide-react';
 import {firebaseClient} from '@/lib/firebase-client';
 import PresenceManager from '@/components/PresenceManager';
@@ -14,18 +14,21 @@ export default function AppNav(){
 
   useEffect(()=>{
     const {auth,db}=firebaseClient();
-    return onAuthStateChanged(auth,u=>{
+    let stopProfile=()=>{};
+    const stopAuth=onAuthStateChanged(auth,u=>{
+      stopProfile();
+      stopProfile=()=>{};
       setMe(u);
       if(!u){
         document.documentElement.dataset.theme='neon';
         return;
       }
-      const profileRef=ref(db,`users/${u.uid}`);
-      import('firebase/database').then(({onValue})=>onValue(profileRef,s=>{
+      stopProfile=onValue(ref(db,`users/${u.uid}`),s=>{
         const p=s.val()||{};
         document.documentElement.dataset.theme=p.theme||'neon';
-      }));
+      });
     });
+    return()=>{stopAuth();stopProfile();};
   },[]);
 
   async function logout(){
