@@ -1,4 +1,5 @@
 import './globals.css';
+import './receipts.css';
 import PresenceManager from '@/components/PresenceManager';
 
 export const metadata={title:'COBRA Social',description:'Social chat with levels, ranks, premium and admin'};
